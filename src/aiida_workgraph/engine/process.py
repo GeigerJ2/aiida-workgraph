@@ -2,19 +2,15 @@
 
 from __future__ import annotations
 
-import functools
 import logging
 import typing as t
 
 import kiwipy
 from plumpy import process_comms
-from plumpy.process_states import Continue, Wait
-from plumpy.workchains import Stepper, _PropagateReturn
+from plumpy.workchains import Stepper
 
 from aiida.common.lang import override
-from aiida.engine.processes.exit_code import ExitCode
-from aiida.engine.processes.process import ProcessState
-from aiida.engine.processes.workchains.awaitable import Awaitable, AwaitableTarget
+from aiida.engine.processes.workchains.awaitable import Awaitable
 from aiida.engine.processes.workchains.workchain import WorkChain, WorkChainSpec
 
 from aiida_workgraph.engine.error_handler_manager import ErrorHandlerManager
@@ -67,9 +63,6 @@ class WorkGraphProcess(WorkChain):
     def _init_runtime_state(self) -> None:
         """Initialise the state that is rebuilt on every load rather than restored from the checkpoint."""
         self._wg: 'WorkGraph' | None = None
-        # Awaitables whose completion callback is already registered with the runner. Callbacks do not survive a
-        # checkpoint, so this must start empty on every load, which is why it is not kept in the context.
-        self._registered_awaitable_pks: set[int] = set()
 
     def _init_managers(self) -> None:
         self.task_manager = TaskManager(self.logger, self.runner, self)
@@ -167,83 +160,26 @@ class WorkGraphProcess(WorkChain):
 
         self._init_managers()
 
-    def _do_step(self) -> t.Any:
-        """Advance the graph by one step.
-
-        Deliberately not delegating to :meth:`WorkChain._do_step`, which opens by clearing ``self._awaitables``.
-        That clearing is what makes an outline step wait for everything it launched; a work graph must keep its
-        awaitables so that tasks launched in earlier steps stay in flight while later ones start.
-        """
-        result: t.Any = None
-
-        try:
-            assert self._stepper is not None
-            finished, result = self._stepper.step()
-        except _PropagateReturn as exception:
-            finished, result = True, exception.exit_code
-
-        if finished or isinstance(result, ExitCode):
-            return result
-
-        if self._awaitables:
-            return Wait(self._do_step, 'Waiting before next step')
-
-        return Continue(self._do_step)
-
     def _action_awaitables(self) -> None:
-        """Register a completion callback for each awaitable that does not already have one.
+        """Register the awaitable callbacks (via `WorkChain`), then surface the waiting status in the report log.
 
-        :class:`~aiida.engine.processes.workchains.workchain.WorkChain` empties its awaitables every step, so by the
-        time it gets here they are always new and it can register unconditionally. A work graph carries its
-        awaitables across steps, so the same one is seen again on each pass through the waiting state and would
-        otherwise collect a further callback every time.
+        `WorkChain` records "Waiting for child processes: ..." only as the process status; echoing it to the
+        report makes it visible in `verdi process report` when a graph pauses for its children.
         """
-        for awaitable in self._awaitables:
-            if awaitable.pk in self._registered_awaitable_pks:
-                continue
-            if awaitable.target != AwaitableTarget.PROCESS:
-                raise AssertionError(f"invalid awaitable target '{awaitable.target}'")
-            callback = functools.partial(self.call_soon, self._on_awaitable_finished, awaitable)
-            self.runner.call_on_process_finish(awaitable.pk, callback)
-            self._registered_awaitable_pks.add(awaitable.pk)
-
-        # `WorkChain` records "Waiting for child processes: ..." only as the process status. Surface it in the
-        # report log as well, so it shows up in `verdi process report` when a graph pauses for its children.
+        super()._action_awaitables()
         if self._awaitables:
             self.report(f'Process status: {self.status}')
 
-    def _on_awaitable_finished(self, awaitable: Awaitable) -> None:
-        """Resolve a finished awaitable, record the outcome on its task, and resume.
+    def _on_awaitable_resolved(self, awaitable: Awaitable) -> None:
+        """Record a finished child's outcome on its task before the process decides whether to resume.
 
-        Unlike :class:`~aiida.engine.processes.workchains.workchain.WorkChain`, this resumes while other awaitables
-        are still outstanding: a finished task can unblock its dependents no matter what else is running. Resuming
-        is conditional on still being in the waiting state, because several awaitables finishing in the same batch
-        would otherwise each try to resume an already-running process.
+        This is the only work-graph-specific step in the awaitable lifecycle. The rest, including resuming as soon
+        as any child finishes rather than only once all do, comes from `WorkChain`, because :class:`DagStepper`
+        declares ``awaitable_barrier = False``.
 
         :param awaitable: the awaitable whose target process has terminated
         """
-        from aiida.common import exceptions
-        from aiida.orm.utils import load_node
-
-        self.logger.info('received callback that awaitable %d has terminated', awaitable.pk)
-
-        try:
-            node = load_node(awaitable.pk)
-        except (exceptions.MultipleObjectsError, exceptions.NotExistent):
-            msg = f'provided pk<{awaitable.pk}> could not be resolved to a valid Node instance'
-            raise ValueError(msg)
-
-        if awaitable.outputs:
-            value: t.Any = {entry.link_label: entry.node for entry in node.base.links.get_outgoing()}
-        else:
-            value = node
-
-        self._resolve_awaitable(awaitable, value)
-        self._registered_awaitable_pks.discard(awaitable.pk)
         self.task_manager.state_manager.update_task_state(awaitable.key)
-
-        if self.state == ProcessState.WAITING:
-            self.resume()
 
     def _build_process_label(self) -> str:
         """Use the workgraph name as the process label."""

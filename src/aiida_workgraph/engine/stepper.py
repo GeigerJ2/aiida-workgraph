@@ -32,6 +32,10 @@ class DagStepper(Stepper):
     a checkpoint is a matter of constructing a fresh instance against the restored context.
     """
 
+    # Opt out of the outline barrier: awaitables persist across steps and the process resumes as each child
+    # finishes, so a task whose inputs are ready starts while an unrelated task is still running.
+    awaitable_barrier = False
+
     @property
     def process(self) -> 'WorkGraphProcess':
         """The process being stepped (:class:`~plumpy.workchains.Stepper` names it ``_workchain``)."""
