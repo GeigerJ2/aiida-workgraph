@@ -269,7 +269,7 @@ def clean_pickled_task_executor(tdata: Dict[str, Any]) -> None:
 
 
 def save_workgraph_data(node: Union[int, orm.Node], inputs: Dict[str, Any]) -> None:
-    from aiida_workgraph.engine.workgraph import WorkGraphSpec
+    from aiida_workgraph.engine.process import WorkGraphSpec
 
     inputs = shallow_copy_nested_dict(inputs)
     wgdata = inputs.pop(WorkGraphSpec.WORKGRAPH_DATA_KEY, {})
@@ -297,7 +297,7 @@ def save_workgraph_data(node: Union[int, orm.Node], inputs: Dict[str, Any]) -> N
 
 def restore_workgraph_data_from_raw_inputs(raw_inputs: Dict[str, Any]) -> Dict[str, Any]:
     """Restore the workgraph data from the raw inputs."""
-    from aiida_workgraph.engine.workgraph import WorkGraphSpec
+    from aiida_workgraph.engine.process import WorkGraphSpec
 
     raw_inputs = dict(raw_inputs)
     wgdata = dict(raw_inputs.pop(WorkGraphSpec.WORKGRAPH_DATA_KEY, {}))
@@ -314,7 +314,7 @@ def load_workgraph_data(node: Union[int, orm.Node]) -> Optional[Dict[str, Any]]:
     Get the workgraph data from the given process node.
     """
     from aiida.orm import load_node
-    from aiida_workgraph.engine.workgraph import WorkGraphSpec
+    from aiida_workgraph.engine.process import WorkGraphSpec
 
     if isinstance(node, int):
         node = load_node(node)

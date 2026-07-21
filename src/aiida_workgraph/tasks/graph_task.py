@@ -18,7 +18,7 @@ class GraphTask(Task):
 
     def execute(self, engine_process, args=None, kwargs=None, var_kwargs=None):
         from aiida_workgraph.utils import create_and_pause_process, call_depth_from_node
-        from aiida_workgraph.engine.workgraph import WorkGraphEngine
+        from aiida_workgraph.engine.process import WorkGraphProcess
         from aiida_workgraph import WorkGraph
         from node_graph.utils.graph import materialize_graph
         from aiida_workgraph.task import TaskHandle
@@ -77,14 +77,14 @@ class GraphTask(Task):
             engine_process.report(f'Task {self.name} is created and paused.')
             process = create_and_pause_process(
                 engine_process.runner,
-                WorkGraphEngine,
+                WorkGraphProcess,
                 inputs,
                 state_msg='Paused through WorkGraph',
             )
             state = TaskState.CREATED
             process = process.node
         else:
-            process = engine_process.submit(WorkGraphEngine, **inputs)
+            process = engine_process.submit(WorkGraphProcess, **inputs)
             state = TaskState.RUNNING
 
         return process, state
@@ -103,7 +103,7 @@ def _build_graph_task_taskspec(
     metadata = {'max_depth': max_depth, 'max_number_jobs': max_number_jobs}
     # We use Process as the process class here, so that the task inherits the metadata
     # inputs from the base Process class, such as 'call_link_label'.
-    # While the actual process class will be the WorkGraphEngine,
+    # While the actual process class will be the WorkGraphProcess,
     # which is set at runtime in the execute() method
 
     return build_callable_TaskSpec(

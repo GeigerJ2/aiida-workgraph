@@ -1,14 +1,19 @@
 from __future__ import annotations
+import logging
 import traceback
+from typing import Any
 from node_graph.error_handler import ErrorHandlerSpec
 
 
 class ErrorHandlerManager:
-    def __init__(self, process, ctx_manager, logger):
+    def __init__(self, process: Any, logger: logging.Logger) -> None:
         self.process = process
-        self.ctx_manager = ctx_manager
-        self.ctx = ctx_manager.ctx
         self.logger = logger
+
+    @property
+    def ctx(self) -> Any:
+        """Read the context off the process, which replaces it wholesale when loading from a checkpoint."""
+        return self.process.ctx
 
     def run_error_handlers(self, task_name: str) -> None:
         """Run error handlers for a task."""

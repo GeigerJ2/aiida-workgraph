@@ -144,7 +144,7 @@ class WorkGraph(node_graph.Graph):
         Run the AiiDA workgraph process and update the process status. The method uses AiiDA's engine to run
         the process, when the process is finished, update the status of the tasks
         """
-        from aiida_workgraph.engine.workgraph import WorkGraphEngine
+        from aiida_workgraph.engine.process import WorkGraphProcess
 
         # set task inputs
         if inputs is not None:
@@ -156,7 +156,7 @@ class WorkGraph(node_graph.Graph):
             raise ValueError(f'Process {self.process.pk} has already been created. Please use the submit() method.')
         self.check_before_run()
         inputs = self.to_engine_inputs(metadata=metadata)
-        _, node = aiida.engine.run_get_node(WorkGraphEngine, inputs=inputs)
+        _, node = aiida.engine.run_get_node(WorkGraphProcess, inputs=inputs)
         self.process = node
         self.update()
         return self.outputs._value
@@ -199,14 +199,14 @@ class WorkGraph(node_graph.Graph):
         """
         from aiida.manage import manager
         from aiida.engine.utils import instantiate_process
-        from aiida_workgraph.engine.workgraph import WorkGraphEngine
+        from aiida_workgraph.engine.process import WorkGraphProcess
 
         self.check_before_run()
         inputs = self.to_engine_inputs(metadata)
         if self.process is None:
             runner = manager.get_manager().get_runner()
             # init a process node
-            process_inited = instantiate_process(runner, WorkGraphEngine, **inputs)
+            process_inited = instantiate_process(runner, WorkGraphProcess, **inputs)
             process_inited.runner.persister.save_checkpoint(process_inited)
             self.process = process_inited.node
             self.process_inited = process_inited

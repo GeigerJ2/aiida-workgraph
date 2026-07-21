@@ -248,9 +248,9 @@ def create_workgraph_process_node():
 
     def process_node(state='finished', exit_status=0):
         """Return a finished process node."""
-        from aiida_workgraph.engine.workgraph import WorkGraphEngine
+        from aiida_workgraph.engine.process import WorkGraphProcess
 
-        process = WorkGraphEngine(
+        process = WorkGraphProcess(
             inputs={
                 'workgraph_data': {
                     'name': 'test',

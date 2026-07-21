@@ -8,7 +8,6 @@ from aiida_workgraph.utils import get_nested_dict
 from aiida.engine.processes.exit_code import ExitCode
 from .task_state import TaskStateManager
 from .task_actions import TaskActionManager
-from .awaitable_manager import AwaitableManager
 import traceback
 from node_graph.link import TaskLink
 from aiida.engine.processes import Process
@@ -28,23 +27,23 @@ process_task_types = [
 class TaskManager:
     """Manages task execution, state updates, and error handling."""
 
-    def __init__(self, ctx_manager, logger, runner, process: Process, awaitable_manager: AwaitableManager):
+    def __init__(self, logger, runner, process: Process):
         """
-        :param ctx_manager: The object managing the 'ctx' dictionary.
         :param logger: A logger instance.
         :param runner: An AiiDA runner.
         :param process: The AiiDA process object that orchestrates the entire WorkGraph.
-        :param awaitable_manager: Manages the global context variables.
         """
-        self.ctx_manager = ctx_manager
-        self.ctx = ctx_manager.ctx
         self.logger = logger
         self.runner = runner
         self.process = process
-        self.awaitable_manager = awaitable_manager
         # Sub-managers
-        self.state_manager = TaskStateManager(ctx_manager, logger, process, awaitable_manager)
+        self.state_manager = TaskStateManager(logger, process)
         self.action_manager = TaskActionManager(self.state_manager, logger, process)
+
+    @property
+    def ctx(self):
+        """Read the context off the process, which replaces it wholesale when loading from a checkpoint."""
+        return self.process.ctx
 
     def get_task(self, name: str):
         """Get task from the context."""
@@ -71,7 +70,7 @@ class TaskManager:
                 self.state_manager.reset_task(task.name)
             self.state_manager.update_task_state(task.name)
 
-    def is_workgraph_finished(self) -> bool:
+    def is_workgraph_finished(self) -> Tuple[bool, Optional[ExitCode]]:
         """Check if the workgraph is finished.
         For `while` workgraph, we need check its conditions"""
         is_finished = True
@@ -232,7 +231,7 @@ class TaskManager:
                 parent_task_name = self.process.wg.tasks[task.name].map_data['parent']
                 if self.process.node.get_task_state(parent_task_name) == TaskState.PLANNED:
                     self.process.node.set_task_state(parent_task_name, state)
-            self.awaitable_manager.to_context(**{task.name: process})
+            self.process.to_context(**{task.name: process})
         except Exception as e:
             error_traceback = traceback.format_exc()  # Capture the full traceback
             self.logger.error(f'Error in task {task.name}: {e}\n{error_traceback}')  # Log the error with traceback

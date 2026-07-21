@@ -37,7 +37,7 @@ def monitor_task(task_name: str, workgraph_pk: int = None, workgraph_name: str =
     """Return `True` if the task in the WorkGraph is completed."""
     from aiida import orm
 
-    from aiida_workgraph.engine.workgraph import WorkGraphEngine
+    from aiida_workgraph.engine.process import WorkGraphProcess
 
     if workgraph_pk:
         try:
@@ -47,7 +47,7 @@ def monitor_task(task_name: str, workgraph_pk: int = None, workgraph_name: str =
     else:
         builder = orm.QueryBuilder()
         builder.append(
-            WorkGraphEngine,
+            WorkGraphProcess,
             filters={'attributes.process_label': {'==': f'WorkGraph<{workgraph_name}>'}},
             tag='process',
         )

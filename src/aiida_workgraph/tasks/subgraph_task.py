@@ -51,7 +51,7 @@ class SubGraphTask(Task):
 
     def execute(self, engine_process, args=None, kwargs=None, var_kwargs=None):
         from aiida_workgraph.utils import create_and_pause_process
-        from aiida_workgraph.engine.workgraph import WorkGraphEngine
+        from aiida_workgraph.engine.process import WorkGraphProcess
 
         inputs = self.prepare_for_subgraph_task(kwargs)
 
@@ -59,14 +59,14 @@ class SubGraphTask(Task):
             engine_process.report(f'Task {self.name} is created and paused.')
             process = create_and_pause_process(
                 engine_process.runner,
-                WorkGraphEngine,
+                WorkGraphProcess,
                 inputs,
                 state_msg='Paused through WorkGraph',
             )
             state = TaskState.CREATED
             process = process.node
         else:
-            process = engine_process.submit(WorkGraphEngine, **inputs)
+            process = engine_process.submit(WorkGraphProcess, **inputs)
             state = TaskState.RUNNING
 
         return process, state

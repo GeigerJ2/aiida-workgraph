@@ -284,8 +284,8 @@ def test_inputs_run_submit_api():
 
 
 def test_run_workgraph_builder():
-    """Test running a WorkGraph using the WorkGraphEngine builder."""
-    from aiida_workgraph.engine.workgraph import WorkGraphEngine
+    """Test running a WorkGraph using the WorkGraphProcess builder."""
+    from aiida_workgraph.engine.process import WorkGraphProcess
     from aiida.engine import run_get_node
 
     @task
@@ -296,7 +296,7 @@ def test_run_workgraph_builder():
     wg = WorkGraph()
     wg.add_task(add, x=1, y=2)
     wgdata = wg.to_engine_inputs()
-    builder = WorkGraphEngine.get_builder()
+    builder = WorkGraphProcess.get_builder()
     builder._update(wgdata)
     _, node = run_get_node(builder)
     wg.process = node

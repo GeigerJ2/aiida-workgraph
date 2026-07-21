@@ -42,7 +42,7 @@ requires-python = ">=3.10,<3.14"
 "process.workflow.workgraph" = "aiida_workgraph.orm.workgraph:WorkGraphNode"
 
 [project.entry-points.'aiida.workflows']
-"workgraph.engine" = "aiida_workgraph.engine.workgraph:WorkGraphEngine"
+"workgraph.process" = "aiida_workgraph.engine.process:WorkGraphProcess"
 
 [project.entry-points."aiida_workgraph.property"]
 "workgraph.aiida_float_vector" = "aiida_workgraph.properties.builtins:PropertyAiiDAFloatVector"
@@ -190,13 +190,10 @@ module = [
   'aiida_workgraph.cli.cmd_workgraph',
   'aiida_workgraph.config',
   'aiida_workgraph.decorator',
-  'aiida_workgraph.engine.awaitable_manager',
-  'aiida_workgraph.engine.context_manager',
   'aiida_workgraph.engine.error_handler_manager',
   'aiida_workgraph.engine.task_actions',
   'aiida_workgraph.engine.task_manager',
   'aiida_workgraph.engine.task_state',
-  'aiida_workgraph.engine.workgraph',
   'aiida_workgraph.executors.builtins',
   'aiida_workgraph.executors.test',
   'aiida_workgraph.manager',

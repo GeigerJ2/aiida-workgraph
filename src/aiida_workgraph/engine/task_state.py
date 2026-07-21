@@ -14,18 +14,18 @@ class TaskStateManager:
     and relationships (parent/child).
     """
 
-    def __init__(self, ctx_manager, logger, process, awaitable_manager):
+    def __init__(self, logger, process):
         """
-        :param ctx_manager: Context manager holding `ctx` (containing tasks, connectivity, etc).
         :param logger: Logger instance.
         :param process: The current AiiDA process.
-        :param awaitable_manager: Manager that orchestrates async tasks/futures.
         """
-        self.ctx_manager = ctx_manager
-        self.ctx = ctx_manager.ctx
         self.logger = logger
         self.process = process
-        self.awaitable_manager = awaitable_manager
+
+    @property
+    def ctx(self):
+        """Read the context off the process, which replaces it wholesale when loading from a checkpoint."""
+        return self.process.ctx
 
     def get_task_runtime_info(self, name: str, key: RuntimeInfoKey) -> Any:
         """Fetch a task runtime property (e.g. process, state, action)."""

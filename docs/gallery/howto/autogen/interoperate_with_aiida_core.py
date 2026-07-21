@@ -176,9 +176,9 @@ class TestWorkChain(WorkChain):
         spec.output('product')
 
     def run_workgraph(self):
-        from aiida_workgraph.engine.workgraph import WorkGraphEngine
+        from aiida_workgraph.engine.process import WorkGraphProcess
 
-        process = self.submit(WorkGraphEngine, **self.inputs.workgraph)
+        process = self.submit(WorkGraphProcess, **self.inputs.workgraph)
         self.to_context(workgraph_process=process)
 
     def results(self):
@@ -189,7 +189,7 @@ class TestWorkChain(WorkChain):
 # %%
 # A few things to note about the above ``WorkChain``:
 #
-# - ``WorkGraphEngine`` is the AiiDA process associated with workgraphs.
+# - ``WorkGraphProcess`` is the AiiDA process associated with workgraphs.
 #   Its ``workgraph_data`` expects a ``WorkGraph`` in dictionary format.
 # - When gathering results, we expect to find workgraph outputs named ``sum`` and ``product``.
 #
@@ -227,12 +227,12 @@ result, node = run_get_node(TestWorkChain, **inputs)
 #
 # .. tip::
 #
-#    All AiiDA processes classes, including ``WorkGraphEngine``, offer a ``get_builder()`` method.
+#    All AiiDA processes classes, including ``WorkGraphProcess``, offer a ``get_builder()`` method.
 #    You can use this method to extract the associated ``ProcessBuilder`` and use it to set inputs directly.
 #
 #    .. code:: python
 #
-#       builder = WorkGraphEngine.get_builder()
+#       builder = WorkGraphProcess.get_builder()
 #       builder.workgraph_data = wg.to_engine_inputs(metadata={"call_link_label": "workgraph"})
 #
 # Let's check the outputs of our ``WorkChain``:
