@@ -17,7 +17,7 @@ from aiida.orm import WorkGraphNode
 from aiida_workgraph.engine.error_handler_manager import ErrorHandlerManager
 from aiida_workgraph.engine.stepper import DagStepper
 from aiida_workgraph.engine.task_manager import TaskManager
-from aiida_workgraph.enums import TaskActionMessage
+from aiida.workgraph.enums import TaskActionMessage
 
 if t.TYPE_CHECKING:
     from aiida.engine.runners import Runner
@@ -38,10 +38,12 @@ class WorkGraphProcess(WorkChain):
     awaitables, checkpointing, node lifecycle) applies unchanged, so this supplies a :class:`DagStepper` through the
     stepper hooks and inherits the rest.
 
-    The three places it still departs from :class:`~aiida.engine.processes.workchains.workchain.WorkChain` all trace
-    back to a single difference: a work chain waits for everything a step launched before starting the next one,
-    whereas here independent branches must stay in flight together. See :meth:`_do_step`,
-    :meth:`_action_awaitables` and :meth:`_on_awaitable_finished`.
+    The one way it departs from :class:`~aiida.engine.processes.workchains.workchain.WorkChain` is concurrency: a
+    work chain waits for everything a step launched before starting the next, whereas here independent branches
+    stay in flight together. That is not overridden here; it follows from :class:`DagStepper` declaring
+    ``awaitable_barrier = False``, which the work chain honours. Only two small work-graph-specific hooks remain,
+    :meth:`_action_awaitables` (surface the waiting status in the report) and :meth:`_on_awaitable_resolved`
+    (record the finished child's outcome on its task).
     """
 
     # Narrowing the node and spec classes is how every AiiDA process specialises its base; mypy sees plain mutable

@@ -3,7 +3,7 @@ from typing import Callable
 
 from typing_extensions import assert_never
 
-from aiida_workgraph.enums import TaskAction, TaskActionMessage, TaskState
+from aiida.workgraph.enums import TaskAction, TaskActionMessage, TaskState
 
 
 class TaskActionManager:

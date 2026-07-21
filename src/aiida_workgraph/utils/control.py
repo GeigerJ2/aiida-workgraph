@@ -6,7 +6,7 @@ from aiida.manage import get_manager
 from aiida import orm
 from aiida.engine.processes import control
 
-from aiida_workgraph.enums import RuntimeInfoKey, TaskAction, TaskActionMessage, TaskState
+from aiida.workgraph.enums import RuntimeInfoKey, TaskAction, TaskActionMessage, TaskState
 
 LOGGER = logging.getLogger(__name__)
 

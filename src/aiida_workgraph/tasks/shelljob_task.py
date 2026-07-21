@@ -10,7 +10,7 @@ from node_graph.executor import RuntimeExecutor
 from node_graph.socket_spec import SocketSpec, merge_specs, SocketMeta
 from aiida_workgraph.socket_spec import from_aiida_process, namespace
 from aiida_workgraph.task import Task, TaskHandle
-from aiida_workgraph.enums import TaskAction, TaskState
+from aiida.workgraph.enums import TaskAction, TaskState
 from aiida import orm
 
 

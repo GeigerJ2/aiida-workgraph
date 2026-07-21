@@ -1,7 +1,7 @@
 from __future__ import annotations
 from node_graph.task_spec import TaskSpec
 from aiida_workgraph.task import Task
-from aiida_workgraph.enums import TaskAction, TaskState
+from aiida.workgraph.enums import TaskAction, TaskState
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:

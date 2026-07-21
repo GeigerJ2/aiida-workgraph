@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, Tuple
 from aiida_workgraph.task import Task
-from aiida_workgraph.enums import TaskAction, TaskState
+from aiida.workgraph.enums import TaskAction, TaskState
 from aiida_workgraph.socket import TaskSocketNamespace
 from aiida_workgraph.utils import get_nested_dict
 from aiida.engine.processes.exit_code import ExitCode

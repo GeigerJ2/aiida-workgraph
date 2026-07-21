@@ -3,7 +3,7 @@ import pytest
 import time
 
 from aiida_workgraph.engine.task_actions import TaskActionManager
-from aiida_workgraph.enums import TaskAction, TaskState
+from aiida.workgraph.enums import TaskAction, TaskState
 
 
 class _RecordingStateManager:

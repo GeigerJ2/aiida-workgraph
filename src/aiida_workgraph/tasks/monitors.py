@@ -3,7 +3,7 @@ import typing as t
 import logging
 
 from aiida_workgraph import task
-from aiida_workgraph.enums import TERMINAL_TASK_STATES
+from aiida.workgraph.enums import TERMINAL_TASK_STATES
 
 LOGGER = logging.getLogger(__name__)
 

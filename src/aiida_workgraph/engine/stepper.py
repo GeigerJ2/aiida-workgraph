@@ -7,7 +7,7 @@ import typing as t
 from plumpy.workchains import Stepper
 
 from aiida.engine.processes.exit_code import ExitCode
-from aiida_workgraph.enums import TaskState
+from aiida.workgraph.enums import TaskState
 from node_graph.config import BUILTIN_TASKS
 
 if t.TYPE_CHECKING:

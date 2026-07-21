@@ -4,7 +4,7 @@ from typing_extensions import assert_never
 from aiida.orm.utils.serialize import serialize
 from aiida_workgraph.orm.utils import deserialize_safe
 from aiida.orm import ProcessNode, Data
-from aiida_workgraph.enums import TERMINAL_TASK_STATES, RuntimeInfoKey, TaskState
+from aiida.workgraph.enums import TERMINAL_TASK_STATES, RuntimeInfoKey, TaskState
 from node_graph.socket import BaseSocket, TaskSocketNamespace
 
 

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from node_graph.task import Task as GraphTask
 from .registry import RegistryHub, registry_hub
-from aiida_workgraph.enums import TaskState
+from aiida.workgraph.enums import TaskState
 import aiida
 from typing import Any, Dict, Optional, Union, Callable, List, TYPE_CHECKING
 from node_graph.task_spec import BaseHandle

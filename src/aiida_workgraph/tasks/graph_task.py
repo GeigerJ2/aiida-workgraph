@@ -1,5 +1,5 @@
 from aiida_workgraph.task import Task
-from aiida_workgraph.enums import TaskAction, TaskState
+from aiida.workgraph.enums import TaskAction, TaskState
 from typing import Callable, Optional
 from node_graph.socket_spec import SocketSpec
 from node_graph.task_spec import TaskSpec

@@ -4,7 +4,7 @@ import logging
 import node_graph
 import aiida
 from aiida_workgraph.task import Task
-from aiida_workgraph.enums import TaskAction, TaskState
+from aiida.workgraph.enums import TaskAction, TaskState
 import time
 from typing import Any, Dict, List, Optional, Union
 from .registry import RegistryHub, registry_hub

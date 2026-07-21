@@ -6,7 +6,7 @@ from aiida_workgraph.utils import create_and_pause_process
 from aiida.engine import run_get_node
 from aiida_pythonjob import pyfunction, PythonJob, PyFunction, MonitorPyFunction
 from aiida_workgraph.task import Task
-from aiida_workgraph.enums import TaskAction, TaskState
+from aiida.workgraph.enums import TaskAction, TaskState
 from node_graph.socket_spec import SocketSpec, SocketSpecSelect, SocketMeta
 from node_graph.task_spec import TaskSpec
 from aiida_workgraph.socket_spec import namespace
