@@ -38,9 +38,6 @@ requires-python = ">=3.10,<3.14"
 [project.entry-points."aiida.cmdline"]
 "workgraph" = "aiida_workgraph.cli.cmd_workgraph:workgraph"
 
-[project.entry-points."aiida.node"]
-"process.workflow.workgraph" = "aiida_workgraph.orm.workgraph:WorkGraphNode"
-
 [project.entry-points.'aiida.workflows']
 "workgraph.process" = "aiida_workgraph.engine.process:WorkGraphProcess"
 
@@ -198,7 +195,6 @@ module = [
   'aiida_workgraph.executors.test',
   'aiida_workgraph.manager',
   'aiida_workgraph.orm.utils',
-  'aiida_workgraph.orm.workgraph',
   'aiida_workgraph.properties.builtins',
   'aiida_workgraph.property',
   'aiida_workgraph.serialization',

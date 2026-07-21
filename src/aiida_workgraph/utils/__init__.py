@@ -352,7 +352,7 @@ def get_processes_latest(
 ) -> Dict[str, Dict[str, Union[int, str]]]:
     """Get the latest info of all tasks from the process."""
     import aiida
-    from aiida_workgraph.orm.workgraph import WorkGraphNode
+    from aiida.orm import WorkGraphNode
 
     tasks = {}
     if pk is None:

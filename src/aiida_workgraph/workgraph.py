@@ -393,7 +393,7 @@ class WorkGraph(node_graph.Graph):
             pk (int, str, orm.ProcessNode): The primary key or uuid of the process node,
                 or the process node itself.
         """
-        from aiida_workgraph.orm.workgraph import WorkGraphNode
+        from aiida.orm import WorkGraphNode
         from aiida_workgraph.utils import load_workgraph_data
 
         if isinstance(pk, (int, str)):

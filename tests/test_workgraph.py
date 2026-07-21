@@ -355,7 +355,7 @@ def test_expose_task_spec():
 
 def test_update_outputs():
     """Test the update method of the WorkGraph."""
-    from aiida_workgraph.orm.workgraph import WorkChainNode
+    from aiida.orm import WorkChainNode
     from aiida.common.links import LinkType
 
     def create_process_node(state='finished', exit_status=0, outputs: dict = None):

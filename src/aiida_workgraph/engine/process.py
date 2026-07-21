@@ -12,12 +12,12 @@ from plumpy.workchains import Stepper
 from aiida.common.lang import override
 from aiida.engine.processes.workchains.awaitable import Awaitable
 from aiida.engine.processes.workchains.workchain import WorkChain, WorkChainSpec
+from aiida.orm import WorkGraphNode
 
 from aiida_workgraph.engine.error_handler_manager import ErrorHandlerManager
 from aiida_workgraph.engine.stepper import DagStepper
 from aiida_workgraph.engine.task_manager import TaskManager
 from aiida_workgraph.enums import TaskActionMessage
-from aiida_workgraph.orm.workgraph import WorkGraphNode
 
 if t.TYPE_CHECKING:
     from aiida.engine.runners import Runner
