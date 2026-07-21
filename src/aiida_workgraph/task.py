@@ -134,7 +134,7 @@ class Task(GraphTask):
                 self.set_outputs_from_data_node(node)
 
     def set_outputs_from_process_node(self, node: aiida.orm.ProcessNode) -> None:
-        from aiida_workgraph.utils import resolve_node_link_managers
+        from aiida.workgraph.utils import resolve_node_link_managers
 
         # if the process is finished ok, update the output sockets
         # note the task.state may not be the same as the node.process_state

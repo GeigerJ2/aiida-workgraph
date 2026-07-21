@@ -97,7 +97,7 @@ class DagStepper(Stepper):
 
         :return: the ``TASK_FAILED`` exit code if any task failed, otherwise ``None``.
         """
-        from aiida_workgraph.utils import resolve_node_link_managers
+        from aiida.workgraph.utils import resolve_node_link_managers
 
         process = self.process
         # Refresh the meta-tasks so that a graph exposing its context or inputs directly as outputs sees the

@@ -310,7 +310,8 @@ class WorkGraph(node_graph.Graph):
         of the tasks that are outgoing from the process node. This includes updating the state of process nodes
         linked to the current process, and data nodes linked to the current process.
         """
-        from aiida_workgraph.utils import get_processes_latest, resolve_node_link_managers
+        from aiida.workgraph.utils import resolve_node_link_managers
+        from aiida_workgraph.utils import get_processes_latest
 
         if self.process is None:
             return

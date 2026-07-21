@@ -75,7 +75,7 @@ class TaskStateManager:
 
     def update_task_state(self, name: str, success=True) -> None:
         """Update task state when the task is finished."""
-        from aiida_workgraph.utils import resolve_node_link_managers
+        from aiida.workgraph.utils import resolve_node_link_managers
 
         task = self.process.wg.tasks[name]
         self.ctx._task_results.setdefault(name, {})
@@ -149,8 +149,8 @@ class TaskStateManager:
 
     def update_meta_tasks(self, name: str) -> None:
         """Export task results to the context based on context mapping."""
-        from aiida_workgraph.utils import update_nested_dict, get_nested_dict
-        from aiida_workgraph.utils import resolve_node_link_managers
+        from aiida.workgraph.utils import update_nested_dict, get_nested_dict
+        from aiida.workgraph.utils import resolve_node_link_managers
 
         for link in self.process.wg.links:
             if link.from_task.name == name and link.to_task.name in [

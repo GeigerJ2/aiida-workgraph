@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from aiida_workgraph.task import Task
 from aiida.workgraph.enums import TaskAction, TaskState
 from aiida_workgraph.socket import TaskSocketNamespace
-from aiida_workgraph.utils import get_nested_dict
+from aiida.workgraph.utils import get_nested_dict
 from aiida.engine.processes.exit_code import ExitCode
 from .task_state import TaskStateManager
 from .task_actions import TaskActionManager
@@ -391,7 +391,7 @@ class TaskManager:
         Dict[str, Any],
     ]:
         """Get input based on the links."""
-        from aiida_workgraph.utils import update_nested_dict_with_special_keys
+        from aiida.workgraph.utils import update_nested_dict_with_special_keys
 
         args = []
         kwargs = {}
