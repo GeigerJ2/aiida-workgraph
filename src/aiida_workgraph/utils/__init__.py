@@ -498,7 +498,7 @@ def serialize_graph_level_data(
     """Recursively walk over the sockets and convert raw Python
     values to AiiDA Data nodes, if needed.
     """
-    from aiida_pythonjob.utils import serialize_ports
+    from aiida.workgraph import serialize_ports
 
     resolve_tagged_values(input_socket)
     return serialize_ports(

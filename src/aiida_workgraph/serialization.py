@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional
 
-from aiida_pythonjob.data.serializer import all_serializers
-from aiida_pythonjob.utils import serialize_ports
+from aiida.orm.nodes.data.serializer import get_serializers
+from aiida.workgraph import serialize_ports
 from node_graph.serializer import SerializationAdapter
 from node_graph.utils import resolve_tagged_values
 
@@ -13,7 +13,7 @@ class AiidaSerializationAdapter(SerializationAdapter):
     name: str = 'AiiDA'
 
     def __init__(self, serializers: Optional[Dict[str, str]] = None, user: Any = None) -> None:
-        self.serializers = serializers or all_serializers
+        self.serializers = serializers or get_serializers()
         self.user = user
 
     def serialize(self, value: Any, socket: Any, *, store: bool) -> Any:

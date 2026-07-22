@@ -1,7 +1,7 @@
 from typing import List, Any
 from aiida_workgraph.property import TaskProperty
 from aiida import orm
-from aiida_pythonjob.data.common_data import NoneData
+from aiida.orm import NoneData
 
 
 class PropertyAny(TaskProperty):

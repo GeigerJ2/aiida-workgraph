@@ -12,5 +12,5 @@ def test_func_as_input(capsys):
 
     wg = WorkGraph('test_func_as_input')
     wg.add_task(sub_workflow, func=add, name='sub_workflow')
-    with pytest.raises(Exception, match='Cannot serialize the provided object'):
+    with pytest.raises(Exception, match='cannot serialize the object of type'):
         wg.save()

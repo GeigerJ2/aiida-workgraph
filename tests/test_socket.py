@@ -175,7 +175,7 @@ def test_node_value(data_type, socket_value, node_value):
 
 def test_set_NoneData():
     from aiida_workgraph.sockets.builtins import SocketInt
-    from aiida_pythonjob.data.common_data import NoneData
+    from aiida.orm import NoneData
 
     s = SocketInt('test')
     s.value = NoneData()
