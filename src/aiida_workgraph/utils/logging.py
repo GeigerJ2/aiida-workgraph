@@ -1,14 +1,1 @@
-import subprocess
-
-from aiida.manage import get_manager
-from aiida.manage.configuration import reset_config
-
-
-def set_aiida_loglevel(level: str):
-    """Set the AiiDA log level."""
-    subprocess.run(
-        ['verdi', 'config', 'set', 'logging.aiida_loglevel', level],
-        check=True,
-    )
-    get_manager().unload_profile()
-    reset_config()
+from aiida.workgraph.utils.logging import *  # noqa: F401,F403  (aiida-workgraph -> aiida.workgraph shim)

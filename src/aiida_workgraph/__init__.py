@@ -1,30 +1,15 @@
-from .workgraph import WorkGraph
-from .task import Task
-from .decorator import task
-from .tasks import TaskPool
-from .tasks.shelljob_task import shelljob
-from .manager import get_current_graph, If, Map, While, Zone
-from . import socket_spec as spec
-from .socket_spec import namespace, dynamic, select, meta
-from .collection import group
+"""Deprecation shim: aiida-workgraph has moved into aiida-core as ``aiida.workgraph``.
 
-__version__ = '0.8.1'
+Every module in this package now forwards to its ``aiida.workgraph`` counterpart. Kept for one release so
+existing ``import aiida_workgraph`` code and the registered entry points keep working; then archived.
+"""
 
-__all__ = [
-    'WorkGraph',
-    'Task',
-    'task',
-    'get_current_graph',
-    'Zone',
-    'If',
-    'Map',
-    'While',
-    'TaskPool',
-    'shelljob',
-    'spec',
-    'namespace',
-    'dynamic',
-    'select',
-    'meta',
-    'group',
-]
+import aiida.workgraph as _aiida_workgraph
+import aiida_workgraph.task  # noqa: F401  force-load the ``task`` submodule now (binds attr=module)...
+from aiida.workgraph import *  # noqa: F401,F403
+from aiida.workgraph import __version__  # noqa: F401
+from aiida.workgraph.tasks.shelljob_task import shelljob  # noqa: F401
+
+# ...then rebind ``task`` to the decorator (last write wins; a later ``import aiida_workgraph.task``
+# finds the submodule already loaded and does not re-bind the attribute).
+task = _aiida_workgraph.task
